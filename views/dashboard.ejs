@@ -3,15 +3,30 @@
 <h2 class="mb-4">Hi, <%= user.name %></h2>
 
 <div class="row">
-  <div class="col-md-3">
+  <div class="col-md-4">
     <ul class="list-group">
       <%
         if(users.length > 0) {
           for(let i = 0; i < users.length; i++) {
             %>
               <li class="list-group-item list-group-item-dark cursor-pointer user-list">
-                <img src="<%= 'http://127.0.0.1:3000/'+users[i]['image'] %>" alt="" width="50px" height="50px">
-                <%= users[i]['name'] %>
+                <!-- <div> -->
+                  <img src="<%= 'http://127.0.0.1:3000/'+users[i]['image'] %>" alt="" width="50px" height="50px">
+                  
+                  <%= users[i]['name'] %>
+                <!-- </div> -->
+
+                <%
+                  if(users[i]['is_online'] == 1){
+                    %>
+                      <sup class="online-status" id="<%= users[i]['_id'] %>-status">Online</sup>
+                    <%
+                  } else {
+                    %>
+                      <sup class="offline-status" id="<%= users[i]['_id'] %>-status">Offline</sup>
+                    <%
+                  }
+                %>
               </li>
             <%
           }
@@ -20,7 +35,7 @@
     </ul>
   </div>
 
-  <div class="col-md-9">
+  <div class="col-md-8">
     <h3 class="start-head"> Click to Start the Chat </h3>
     <div class="chat-section">
       <div id="chat-container">
@@ -48,6 +63,20 @@
       $('.start-head').hide();
       $('.chat-section').show();
     })
+  })
+
+  // get user online status
+  socket.on('getOnlineUser', function(data) {
+    $('#'+data.user_id+'-status').text('Online');
+    $('#'+data.user_id+'-status').removeClass('offline-status');
+    $('#'+data.user_id+'-status').addClass('online-status');
+  })
+
+  // get user offline status
+  socket.on('getOfflineUser', function(data) {
+    $('#'+data.user_id+'-status').text('Offline');
+    $('#'+data.user_id+'-status').addClass('offline-status');
+    $('#'+data.user_id+'-status').removeClass('online-status');
   })
 </script>
 

@@ -26,13 +26,19 @@ usp.on('connection', async function(socket) {
 
   let userId = socket.handshake.auth.token;
 
-  await User.findByIdAndUpdate({ _id: userId }, { $set: { is_online: '1' } })
+  await User.findByIdAndUpdate({ _id: userId }, { $set: { is_online: '1' } });
+
+  // user broadcast online status
+  socket.broadcast.emit('getOnlineUser', { user_id: userId });
 
   socket.on('disconnect', async function() {  // Fixed typo here
     console.log('User Disconnected');
 
     let userId = socket.handshake.auth.token;
-    await User.findByIdAndUpdate({ _id: userId }, { $set: { is_online: '0' } })
+    await User.findByIdAndUpdate({ _id: userId }, { $set: { is_online: '0' } });
+
+    // user broadcast offline status
+    socket.broadcast.emit('getOfflineUser', { user_id: userId });
   });
 });
 
