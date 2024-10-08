@@ -11,7 +11,7 @@ const User = require('./models/userModel');
 const app = express();
 
 // MongoDB connection
-mongoose.connect('mongodb+srv://Zodd:VqA04OuAPK3cjVgr@my-database.si5s7xh.mongodb.net/ChatApp?retryWrites=true&w=majority');
+mongoose.connect(process.env.MONGO_URL);
 
 // Create HTTP server with Express app
 const server = http.createServer(app);
@@ -28,8 +28,11 @@ usp.on('connection', async function(socket) {
 
   await User.findByIdAndUpdate({ _id: userId }, { $set: { is_online: '1' } })
 
-  socket.on('disconnect', function() {  // Fixed typo here
+  socket.on('disconnect', async function() {  // Fixed typo here
     console.log('User Disconnected');
+
+    let userId = socket.handshake.auth.token;
+    await User.findByIdAndUpdate({ _id: userId }, { $set: { is_online: '0' } })
   });
 });
 
