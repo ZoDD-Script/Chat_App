@@ -111,7 +111,9 @@
             </div>
           `;
           $('#chat-container').append(html);
-          socket.emit('newChat', response.data)
+          socket.emit('newChat', response.data);
+
+          scrollChat();
         } else {
           alert(data.message);
         };
@@ -129,6 +131,7 @@
       $('#chat-container').append(html);
     }
     
+    scrollChat();
   })
 
   // load old chats
@@ -154,7 +157,15 @@
     }
 
     $('#chat-container').append(html);
+
+    scrollChat();
   });
+
+  function scrollChat() {
+    $('#chat-container').animate({
+      scrollTop: $('#chat-container').offset().top + $('#chat-container')[0].scrollHeight
+    }, 0);
+  }
 </script>
 
 <%- include('layouts/footer.ejs') %>
