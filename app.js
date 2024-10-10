@@ -40,6 +40,11 @@ usp.on('connection', async function(socket) {
     // user broadcast offline status
     socket.broadcast.emit('getOfflineUser', { user_id: userId });
   });
+
+  //chattig implementation
+  socket.on('newChat', function(data) {
+    socket.broadcast.emit('loadNewChat', data);
+  });
 });
 
 // Middleware for routes

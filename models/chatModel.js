@@ -5,7 +5,7 @@ const ChatSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  receipient_id: {
+  receiver_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
