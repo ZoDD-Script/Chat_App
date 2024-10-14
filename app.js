@@ -56,6 +56,12 @@ usp.on('connection', async function(socket) {
 
     socket.emit('loadChats', { chats: chats });
   });
+
+  //delete chats
+  socket.on('chatDeleted', function(id) {
+    console.log("chat is ", id)
+    socket.broadcast.emit('chatMessageDeleted', id);
+  });
 });
 
 // Middleware for routes

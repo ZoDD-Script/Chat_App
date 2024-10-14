@@ -8363,3 +8363,6 @@ a[data-toggle="collapse"] {
   margin: 10px;
   color: black;
 }
+.fa-trash{
+  color: red;
+}
