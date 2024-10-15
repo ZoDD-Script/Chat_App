@@ -1,5 +1,6 @@
 const User = require('../models/userModel');
 const Chat = require('../models/chatModel')
+const Group = require('../models/groupModel')
 const bcrypt = require('bcrypt');
 
 const registerLoad = async (req, res) => {
@@ -124,6 +125,35 @@ const updateChat = async (req, res) => {
   }
 }
 
+const loadGroups = async (req, res) => {
+  try{
+    res.render('group');
+
+  } catch (error) {
+    console.log('error', error.message);
+    res.status(400).send({ success: false, msg: error.message })
+  }
+}
+
+const createGroup = async (req, res) => {
+  try{
+    const group = new Group({
+      creator_id: req.session.user._id,
+      name: req.body.name,
+      image: 'images/'+req.file.filename,
+      limit: req.body.limit
+    });
+
+    await group.save();
+
+    res.render('group', { message: req.body.name+' Group created successfully' });
+
+  } catch (error) {
+    console.log('error', error);
+    res.status(400).send({ success: false, msg: error.message })
+  }
+}
+
 module.exports = {
   registerLoad,
   register,
@@ -134,4 +164,6 @@ module.exports = {
   saveChat,
   deleteChat,
   updateChat,
+  loadGroups,
+  createGroup,
 }

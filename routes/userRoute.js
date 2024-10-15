@@ -29,7 +29,7 @@ const storage = multer.diskStorage({
     const name = Date.now()+'-'+file.originalname
     cb(null, name);
   }
-})
+});
 
 const upload = multer({ storage: storage });
 
@@ -45,10 +45,13 @@ user_route.post('/', userController.login);
 user_route.get('/logout', auth.isLogin, userController.logout);
 
 user_route.get('/dashboard', auth.isLogin, userController.loadDashboard);
-user_route.post('/save-chat', userController.saveChat)
+user_route.post('/save-chat', userController.saveChat);
 
-user_route.post('/delete-chat', userController.deleteChat)
-user_route.post('/update-chat', userController.updateChat)
+user_route.post('/delete-chat', userController.deleteChat);
+user_route.post('/update-chat', userController.updateChat);
+
+user_route.get('/groups', auth.isLogin, userController.loadGroups)
+user_route.post('/groups', upload.single('image'), userController.createGroup)
 
 user_route.get('*', function(req, res) {
   res.redirect('/');

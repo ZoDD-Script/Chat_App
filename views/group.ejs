@@ -1,0 +1,47 @@
+<%- include('layouts/header.ejs') %>
+
+<h2 class="mb-4">Groups</h2>
+
+<div class="container">
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createGroupModal">
+    Create Group
+  </button>
+
+  <% 
+    if(typeof message !== 'undefined') {
+      %>
+        <p style="color: green;"><%= message %></p>
+      <%
+    }
+  %>
+
+  <!-- Modal -->
+  <div class="modal fade" id="createGroupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Create Group</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <form action="" enctype="multipart/form-data" method="POST">
+          <div class="modal-body">
+            <input type="text" name="name" placeholder="Enter Group Name" required class="w-100 mb-2" id="">
+            <input type="file" name="image" required class="w-100 mb-2" id="">
+            <input type="number" min="1" placeholder="Enter User limit" name="limit" required class="w-100 mb-2" id="">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Create</button>
+          </div>      
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('layouts/footer.ejs') %>
