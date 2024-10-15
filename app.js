@@ -26,8 +26,9 @@ usp.on('connection', async function(socket) {
   console.log('User Connected');
 
   let userId = socket.handshake.auth.token;
+  // if(!userId) return { success: false }
 
-  await User.findByIdAndUpdate({ _id: userId }, { $set: { is_online: '1' } });
+  await User.findByIdAndUpdate({ _id: (userId) }, { $set: { is_online: '1' } });
 
   // user broadcast online status
   socket.broadcast.emit('getOnlineUser', { user_id: userId });

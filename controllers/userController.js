@@ -50,7 +50,8 @@ const login = async (req, res) => {
       const passwordMatch = await bcrypt.compare(password, userData.password);
       if(passwordMatch) {
         req.session.user = userData;
-        res.redirect('/dashboard')
+        res.cookie(`user`, JSON.stringify(userData));
+        res.redirect('/dashboard');
       } else {
         res.render('login', { message: 'Password is Incorrect!' })
       }
@@ -65,6 +66,7 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
+    res.clearCookie('user');
     req.session.destroy();
     res.redirect('/');
   } catch (error) {

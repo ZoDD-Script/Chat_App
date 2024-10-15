@@ -2,10 +2,13 @@ const express = require('express');
 const user_route = express();
 
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 const session = require('express-session');
 const { SESSION_SECRET } = process.env;
 user_route.use(session({ secret: SESSION_SECRET }));
+
+user_route.use(cookieParser());
 
 user_route.use(bodyParser.json());
 user_route.use(bodyParser.urlencoded( { extended: true } ));
