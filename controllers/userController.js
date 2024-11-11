@@ -1,8 +1,9 @@
 const User = require('../models/userModel');
-const Chat = require('../models/chatModel')
-const Group = require('../models/groupModel')
-const Member = require('../models/memberModel')
+const Chat = require('../models/chatModel');
+const Group = require('../models/groupModel');
+const Member = require('../models/memberModel');
 const bcrypt = require('bcrypt');
+const mongoose = require("mongoose");
 
 const registerLoad = async (req, res) => {
   try {
@@ -165,7 +166,34 @@ const createGroup = async (req, res) => {
 
 const getMembers = async (req, res) => {
   try{
-    const users = await User.find({ _id: { $nin: [ req.session.user._id ] } });
+    const users = await User.aggregate([
+      {
+        $lookup: {
+          from: "members",
+          localField: "_id",
+          foreignField: "user_id",
+          pipeline:[
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: [ "$group_id", new mongoose.Types.ObjectId(req.body.group_id) ] }
+                  ]
+                }
+              }
+            }
+          ],
+          as: "member"
+        }
+      },
+      {
+        $match: {
+          _id: { 
+            $nin: [ new mongoose.Types.ObjectId(req.session.user._id) ]
+          } 
+        }
+      }
+    ]);
     // console.log('Users', users)
     res.status(200).send({ success: true, data: users });
 
