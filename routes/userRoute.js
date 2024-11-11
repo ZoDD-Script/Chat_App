@@ -50,8 +50,11 @@ user_route.post('/save-chat', userController.saveChat);
 user_route.post('/delete-chat', userController.deleteChat);
 user_route.post('/update-chat', userController.updateChat);
 
-user_route.get('/groups', auth.isLogin, userController.loadGroups)
-user_route.post('/groups', upload.single('image'), userController.createGroup)
+user_route.get('/groups', auth.isLogin, userController.loadGroups);
+user_route.post('/groups', upload.single('image'), userController.createGroup);
+
+user_route.post('/get-members', auth.isLogin, userController.getMembers);
+user_route.post('/add-members', auth.isLogin, userController.addMembers);
 
 user_route.get('*', function(req, res) {
   res.redirect('/');

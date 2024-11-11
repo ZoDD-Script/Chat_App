@@ -215,3 +215,68 @@ $('#update-chat-form').submit(function(event) {
 socket.on('chatMessageUpdated', function(data) {
 	$('#'+data.id).find('span').text(data.message);
 });
+
+// add member js
+$('.addMember').click(function() {
+	let id = $(this).attr('data-id');
+	let limit = $(this).attr('data-limit');
+
+	$('#group_id').val(id);
+	$('#limit').val(limit);
+
+	$.ajax({
+		url: '/get-members',
+		type: 'POST',
+		data: { group_id: id },
+		success: function(res) {
+			if(res.success == true) {
+				let users = res.data;
+				console.log('res.data', res.data)
+				let html = '';
+
+				for(let i = 0; i < users.length; i++) {
+					html += `
+						<tr>
+							<td>
+								<input type="checkbox" name="members[]" value="`+users[i]['_id']+`"/>
+							</td>
+							<td>`+users[i]['name']+`</td>
+						</tr>
+					`
+				}
+				$('.addMemberInTable').html(html);
+			} else {
+				alert(res.msg)
+			}
+		}
+	});
+});
+
+// add member form submit code
+$('#add-member-form').submit(function(event) {
+	event.preventDefault();
+
+	let formData = $(this).serialize();
+
+	$.ajax({
+		url: "/add-members",
+		type: "POST",
+		data: formData,
+		success: function(res) {
+			if(res.success ) {
+
+				$("#memberModal").modal("hide");
+				$('#add-member-form')[0].reset();
+				alert(res.msg)
+
+			} else {
+
+				$('#add-member-error').text(res.msg);
+				setTimeout(() => {
+					$("#add-member-error").text('');
+				}, 3000);
+				
+			}
+		}
+	});
+});

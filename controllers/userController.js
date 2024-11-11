@@ -1,6 +1,7 @@
 const User = require('../models/userModel');
 const Chat = require('../models/chatModel')
 const Group = require('../models/groupModel')
+const Member = require('../models/memberModel')
 const bcrypt = require('bcrypt');
 
 const registerLoad = async (req, res) => {
@@ -127,7 +128,11 @@ const updateChat = async (req, res) => {
 
 const loadGroups = async (req, res) => {
   try{
-    res.render('group');
+    const groups = await Group.find({
+      creator_id: req.session.user._id,
+    });
+    
+    res.render('group', { groups: groups });
 
   } catch (error) {
     console.log('error', error.message);
@@ -146,10 +151,56 @@ const createGroup = async (req, res) => {
 
     await group.save();
 
-    res.render('group', { message: req.body.name+' Group created successfully' });
+    const groups = await Group.find({
+      creator_id: req.session.user._id,
+    });
+
+    res.render('group', { message: req.body.name+' Group created successfully', groups: groups });
 
   } catch (error) {
     console.log('error', error);
+    res.status(400).send({ success: false, msg: error.message })
+  }
+}
+
+const getMembers = async (req, res) => {
+  try{
+    const users = await User.find({ _id: { $nin: [ req.session.user._id ] } });
+    // console.log('Users', users)
+    res.status(200).send({ success: true, data: users });
+
+  } catch (error) {
+    console.log('error', error.message);
+    res.status(400).send({ success: false, msg: error.message })
+  }
+}
+
+const addMembers = async (req, res) => {
+  try{
+    if(!req.body.members) {
+      res.status(200).send({ success: false, msg: "Please select any one member" });
+    } else if (req.body.members.length >  parseInt(req.body.limit)) {
+      res.status(200).send({ success: false, msg: "You cannot sellect more than " + req.body.limit + " Members" });
+    } else {
+      await Member.deleteMany({ group_id: req.body.group_id, });
+
+      let data = [];
+
+      const members = req.body.members;
+
+      for (let i = 0; i < members.length; i++) {
+        data.push({
+          group_id: req.body.group_id,
+          user_id: members[i]
+        })
+      };
+
+      await Member.insertMany(data);
+
+      res.status(200).send({ success: true, msg: "Members added Successfully" });
+    }
+  } catch (error) {
+    console.log('error', error.message);
     res.status(400).send({ success: false, msg: error.message })
   }
 }
@@ -166,4 +217,6 @@ module.exports = {
   updateChat,
   loadGroups,
   createGroup,
+  getMembers,
+  addMembers,
 }
