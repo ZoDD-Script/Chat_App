@@ -233,6 +233,38 @@ const addMembers = async (req, res) => {
   }
 }
 
+const updateChatGroup = async (req, res) => {
+  try{
+    if(parseInt(req.body.limit) < parseInt(req.body.last_limit)) {
+      await Member.deleteMany({ group_id: req.body.id })
+    };
+
+    let updateObj;
+
+    if(req.file != undefined) {
+      updateObj = {
+        name: req.body.name,
+        image: 'images/'+req.file.filename,
+        limit: req.body.limit
+      };
+    } else {
+      updateObj = {
+        name: req.body.name,
+        limit: req.body.limit
+      };
+    };
+
+    await Group.findByIdAndUpdate({ _id: req.body.id }, {
+      $set: updateObj
+    });
+
+    res.status(200).send({ success: true, msg: "Chat Group Updated Successfully" });
+  } catch (error) {
+    console.log('error', error.message);
+    res.status(400).send({ success: false, msg: error.message })
+  }
+}
+
 module.exports = {
   registerLoad,
   register,
@@ -247,4 +279,5 @@ module.exports = {
   createGroup,
   getMembers,
   addMembers,
+  updateChatGroup,
 }

@@ -41,7 +41,11 @@
                 <td><%= groups[i]['name'] %></td>
                 <td><%= groups[i]['limit'] %></td>
                 <td><a class="cursor-pointer addMember" data-id="<%= groups[i]['_id'] %>" data-limit="<%= groups[i]['limit'] %>" data-toggle="modal" data-target="#memberModal">Members</a></td>
-                <td><%= groups[i]['name'] %></td>
+                <td>
+                  <a class="updateMember" data-obj="<%= JSON.stringify(groups[i]) %>" data-toggle="modal" data-target="#updateGroupModal" href="">
+                    <i class="fa fa-pencil"></i>
+                  </a>
+                </td>
               </tr>
             <%
           }
@@ -122,6 +126,37 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary">Create</button>
+          </div>      
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Update Modal -->
+  <div class="modal fade" id="updateGroupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Update Group</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <form action="" enctype="multipart/form-data" method="POST" id="updateChatGroupForm">
+          <div class="modal-body">
+            <input type="hidden" name="id" id="update_group_id">
+            <input type="hidden" name="last_limit" id="last_limit">
+            <input type="text" name="name" id="group_name" placeholder="Enter Group Name" required class="w-100 mb-2" id="">
+            <input type="file" name="image" class="w-100 mb-2" id="">
+            <input type="number" min="1" id="group_limit" placeholder="Enter User limit" name="limit" required class="w-100 mb-2" id="">
+
+            <p><b>(Note) </b> If you enter the limit less than the previous limit we will remove all the users from this Group.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-warning">Update</button>
           </div>      
         </form>
 
