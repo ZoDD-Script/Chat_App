@@ -45,6 +45,9 @@
                   <a class="updateMember" data-obj="<%= JSON.stringify(groups[i]) %>" data-toggle="modal" data-target="#updateGroupModal" href="">
                     <i class="fa fa-pencil"></i>
                   </a>
+                  <a class="deleteGroup" data-id="<%= groups[i]['_id'] %>" data-name="<%= groups[i]['name'] %>" data-toggle="modal" data-target="#deleteGroupModal" href="">
+                    <i class="fa fa-trash"></i>
+                  </a>
                 </td>
               </tr>
             <%
@@ -157,6 +160,32 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-warning">Update</button>
+          </div>      
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+  <div class="modal fade" id="deleteGroupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Delete Group</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <form method="POST" id="deleteChatGroupForm">
+          <div class="modal-body">
+            <input type="hidden" name="id" id="delete_group_id">
+            <p>Are you sure you want to delete <b id="delete_group_name"></b> Group?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-danger">Delete</button>
           </div>      
         </form>
 

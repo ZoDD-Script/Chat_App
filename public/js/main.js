@@ -311,4 +311,28 @@ $('#updateChatGroupForm').submit(function(e) {
 			}
 		}
 	})
+});
+
+///////////////////// delete group chat ////////////////////////////
+$('.deleteGroup').click(function() {
+	$('#delete_group_id').val($(this).attr('data-id'))
+	$('#delete_group_name').text($(this).attr('data-name'))
+})
+
+$('#deleteChatGroupForm').submit(function(e) {
+	e.preventDefault();
+
+	let formData = $(this).serialize();
+
+	$.ajax({
+		url: '/delete-chat-group',
+		type: "POST",
+		data: formData,
+		success: function(res) {
+			alert(res.msg);
+			if(res.success) {
+				location.reload();
+			}
+		} 
+	})
 })
