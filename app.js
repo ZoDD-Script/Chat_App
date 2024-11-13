@@ -67,6 +67,11 @@ usp.on('connection', async function(socket) {
   socket.on('chatUpdated', function(data) {
     socket.broadcast.emit('chatMessageUpdated', data);
   });
+
+  // new group chat added
+  socket.on('newGroupChat', function(data) {
+    socket.broadcast.emit('loadNewGroupChat', data); // broadcast group chat object
+  });
 });
 
 // Middleware for routes

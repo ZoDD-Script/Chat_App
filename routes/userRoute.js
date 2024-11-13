@@ -61,7 +61,9 @@ user_route.post('/delete-chat-group', auth.isLogin, userController.deleteChatGro
 
 user_route.get('/share-group/:id', userController.shareGroup);
 user_route.post('/join-group', userController.joinGroup);
+
 user_route.get('/group-chat', auth.isLogin,  userController.groupChats);
+user_route.post('/group-save-chat', auth.isLogin,  userController.saveGroupChats);
 
 // user_route.get('*', function(req, res) {
 //   res.redirect('/');

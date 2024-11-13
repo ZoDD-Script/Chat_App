@@ -2,6 +2,7 @@ const User = require('../models/userModel');
 const Chat = require('../models/chatModel');
 const Group = require('../models/groupModel');
 const Member = require('../models/memberModel');
+const GroupChat = require('../models/groupChatModel');
 const bcrypt = require('bcrypt');
 const mongoose = require("mongoose");
 
@@ -328,6 +329,23 @@ const groupChats = async (req, res) => {
   }
 }
 
+const saveGroupChats = async (req, res) => {
+  try {
+    const chat = new GroupChat({
+      sender_id: req.body.sender_id,
+      group_id: req.body.group_id,
+      message: req.body.message,
+    });
+
+    const newChat = await chat.save();
+
+    res.status(200).send({ success: true, chat: newChat });
+  } catch (error) {
+    console.log('error', error.message);
+    res.status(400).send({ success: false, msg: error.message });
+  }
+}
+
 module.exports = {
   registerLoad,
   register,
@@ -347,4 +365,5 @@ module.exports = {
   shareGroup,
   joinGroup,
   groupChats,
+  saveGroupChats,
 }

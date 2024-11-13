@@ -31,6 +31,7 @@ let userData = JSON.parse(getCookie('user'));
 
 let sender_id = userData._id;
 let receiver_id;
+let global_group_id;
 let socket = io('/user-namespace', {
 	auth: {
 		token: userData._id
@@ -383,4 +384,53 @@ $('.join-now').click(function() {
 $('.group-list').click(function() {
 	$('.group-start-head').hide();
 	$('.group-chat-section').show();
-})
+
+	global_group_id = $(this).attr('data-id');
+});
+
+$('#group-chat-form').submit(function(event) {
+	event.preventDefault();
+
+	let message = $('#group-message').val();
+
+	$.ajax({
+		url: '/group-save-chat',
+		type: 'POST',
+		data: { sender_id: sender_id, group_id: global_group_id, message: message },
+		success: function(response) {
+			if(response.success) {
+				console.log("response", response.chat);
+				$('#group-message').val('');
+				let message = response.chat.message;
+				let html = `
+					<div class="current-user-chat" id='`+response.chat._id+`'>
+						<h5>
+							<span>`+message+`</span>
+						</h5>
+					</div>
+				`;
+				$('#group-chat-container').append(html);
+				socket.emit('newGroupChat', response.chat);
+
+				scrollChat();
+			} else {
+				alert(data.message);
+			};
+		},
+	});
+});
+
+socket.on('loadNewGroupChat', function(data) {
+	if(global_group_id == data.group_id) {
+		let html = `
+			<div class="distance-user-chat" id='`+data._id+`'>
+				<h5>
+					<span>`+data.message+`</span>
+				</h5>
+			</div>
+		`;
+		$('#group-chat-container').append(html);
+
+		scrollChat(); // scroll chat data
+	};
+});
