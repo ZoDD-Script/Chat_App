@@ -355,3 +355,26 @@ $('.copy').click(function() {
 		$('.copied_text').remove();
 	}, 3000);
 });
+
+/////////////////////// Join group script ///////////////////
+$('.join-now').click(function() {
+	$(this).text('Wait....');
+	$(this).attr('disabled', 'disabled');
+	
+	let group_id = $(this).attr('data-id');
+
+	$.ajax({
+		url: '/join-group',
+		type: 'POST',
+		data: { group_id: group_id },
+		success: function(res) {
+			alert(res.msg);
+			if(res.success) {
+				location.reload();
+			} else {
+				$(this).text('Join Now');
+				$(this).removeAttr('disabled');
+			}
+		}
+	})
+})

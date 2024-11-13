@@ -300,6 +300,22 @@ const shareGroup = async (req, res) => {
   }
 }
 
+const joinGroup = async (req, res) => {
+  try{
+    const member = new Member({
+      group_id: req.body.group_id,
+      user_id: req.session.user._id,
+    });
+    
+    await member.save();
+
+    res.status(200).send({ success: true, msg: "Congratulation, you have joined the Group Successfully!" });
+  } catch (error) {
+    console.log('error', error.message);
+    res.status(400).send({ success: false, msg: error.message })
+  }
+}
+
 module.exports = {
   registerLoad,
   register,
@@ -317,4 +333,5 @@ module.exports = {
   updateChatGroup,
   deleteChatGroup,
   shareGroup,
+  joinGroup,
 }

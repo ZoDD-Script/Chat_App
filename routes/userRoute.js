@@ -60,6 +60,7 @@ user_route.post('/update-chat-group', auth.isLogin, upload.single('image'), user
 user_route.post('/delete-chat-group', auth.isLogin, userController.deleteChatGroup);
 
 user_route.get('/share-group/:id', userController.shareGroup);
+user_route.post('/join-group', userController.joinGroup);
 
 // user_route.get('*', function(req, res) {
 //   res.redirect('/');
