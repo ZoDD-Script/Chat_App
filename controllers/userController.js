@@ -277,6 +277,29 @@ const deleteChatGroup = async (req, res) => {
   }
 }
 
+const shareGroup = async (req, res) => {
+  try{
+    const groupData = await Group.findOne({ _id: req.params.id });
+
+    if(!groupData) {
+      res.render('error', { message: '404 not found!' });
+    } else if(req.session.user == undefined) {
+      res.render('error', { message: 'You need to log in to access the Group URL link!' });
+    } else {
+      let totalMembers = await Member.find({ group_id: req.params.id }).countDocuments();
+      let available = groupData.limit - totalMembers;
+
+      let isOwner = groupData.creator_id == req.session.user._id ? true : false;
+      let isJoined = await Member.find({ group_id: req.params.id, user_id: req.session.user._id }).countDocuments();
+
+      res.render('shareLink', { group: groupData, available, totalMembers, isOwner, isJoined });
+    };
+  } catch (error) {
+    console.log('error', error.message);
+    res.status(400).send({ success: false, msg: error.message })
+  }
+}
+
 module.exports = {
   registerLoad,
   register,
@@ -293,4 +316,5 @@ module.exports = {
   addMembers,
   updateChatGroup,
   deleteChatGroup,
+  shareGroup,
 }
