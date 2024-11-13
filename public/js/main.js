@@ -378,3 +378,9 @@ $('.join-now').click(function() {
 		}
 	})
 })
+
+/////////////////////// Group Chatting script ///////////////////
+$('.group-list').click(function() {
+	$('.group-start-head').hide();
+	$('.group-chat-section').show();
+})

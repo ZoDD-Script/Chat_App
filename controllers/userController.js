@@ -316,6 +316,18 @@ const joinGroup = async (req, res) => {
   }
 }
 
+const groupChats = async (req, res) => {
+  try {
+    const myGroups = await Group.find({ creator_id: req.session.user._id });
+    const joinedGroups = await Member.find({ user_id: req.session.user._id }).populate('group_id');
+
+    res.render('chat-group', { myGroups, joinedGroups })
+  } catch (error) {
+    console.log('error', error.message);
+    res.status(400).send({ success: false, msg: error.message });
+  }
+}
+
 module.exports = {
   registerLoad,
   register,
@@ -334,4 +346,5 @@ module.exports = {
   deleteChatGroup,
   shareGroup,
   joinGroup,
+  groupChats,
 }
