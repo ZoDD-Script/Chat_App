@@ -334,5 +334,24 @@ $('#deleteChatGroupForm').submit(function(e) {
 				location.reload();
 			}
 		} 
-	})
-})
+	});
+});
+
+///////////////////// copy sharable link /////////////////////
+$('.copy').click(function() {
+	$(this).prepend('<span class="copied_text">Copied</span>');
+
+	let group_id = $(this).attr('data-id');
+	let url = window.location.host+'/share-group/'+group_id;
+
+	let temp = $('<input>');
+	$('body').append(temp);
+	temp.val(url).select();
+	document.execCommand("copy");
+
+	temp.remove();
+
+	setTimeout(() => {
+		$('.copied_text').remove();
+	}, 3000);
+});
