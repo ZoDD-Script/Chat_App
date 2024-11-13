@@ -381,11 +381,19 @@ $('.join-now').click(function() {
 })
 
 /////////////////////// Group Chatting script ///////////////////
+function scrollGroupChat() {
+	$('#group-chat-container').animate({
+		scrollTop: $('#group-chat-container').offset().top + $('#group-chat-container')[0].scrollHeight
+	}, 0);
+}
+
 $('.group-list').click(function() {
 	$('.group-start-head').hide();
 	$('.group-chat-section').show();
 
 	global_group_id = $(this).attr('data-id');
+
+	loadGroupChats();
 });
 
 $('#group-chat-form').submit(function(event) {
@@ -431,6 +439,42 @@ socket.on('loadNewGroupChat', function(data) {
 		`;
 		$('#group-chat-container').append(html);
 
-		scrollChat(); // scroll chat data
+		scrollGroupChat(); // scroll chat data
 	};
 });
+
+function loadGroupChats() {
+	$.ajax({
+		url: '/load-group-chats',
+		type: "POST",
+		data: { group_id: global_group_id },
+		success: function(res) {
+			if(res.success) {
+				console.log('chats', res)
+				let chats = res.data;
+				let html = ``;
+
+				for(let i =0; i < chats.length; i++) {
+					let className = 'distance-user-chat'
+					if(chats[i]['sender_id'] == sender_id) {
+						className = 'current-user-chat'
+					}
+
+					html += `
+						<div class="`+className+`" id='`+chats[i]['_id']+`'>
+							<h5>
+								<span>`+chats[i]['message']+`</span>
+							</h5>
+						</div>
+					`;
+				}
+
+				$('#group-chat-container').html(html);
+
+				scrollGroupChat();
+			} else {
+				alert(res.msg)
+			}
+		}
+	})
+}

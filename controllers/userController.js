@@ -346,6 +346,18 @@ const saveGroupChats = async (req, res) => {
   }
 }
 
+const loadGroupChats = async (req, res) => {
+  try{
+    const groupChats = await GroupChat.find({ group_id: req.body.group_id });
+    
+    res.status(200).send({ success: true, data: groupChats });
+
+  } catch (error) {
+    console.log('error', error.message);
+    res.status(400).send({ success: false, msg: error.message })
+  }
+}
+
 module.exports = {
   registerLoad,
   register,
@@ -366,4 +378,5 @@ module.exports = {
   joinGroup,
   groupChats,
   saveGroupChats,
+  loadGroupChats,
 }
