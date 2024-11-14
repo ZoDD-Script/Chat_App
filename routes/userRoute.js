@@ -65,6 +65,7 @@ user_route.post('/join-group', userController.joinGroup);
 user_route.get('/group-chat', auth.isLogin,  userController.groupChats);
 user_route.post('/group-save-chat', userController.saveGroupChats);
 user_route.post('/load-group-chats', userController.loadGroupChats);
+user_route.post('/delete-group-chat-message', userController.deleteGroupChatMessage);
 
 // user_route.get('*', function(req, res) {
 //   res.redirect('/');
