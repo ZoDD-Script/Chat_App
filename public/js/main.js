@@ -416,7 +416,16 @@ $('#group-chat-form').submit(function(event) {
 							<span>`+message+`</span>
 							<i class="fa fa-trash deleteGroupChat" aria-hidden="true" data-id='`+response.chat._id+`' data-toggle="modal" data-target="#deleteGroupChatModal"></i>
 							<i class="fa fa-edit" aria-hidden="true" data-id='`+response.chat._id+`' data-msg='`+message+`' data-toggle="modal" data-target="#editGroupChatModal"></i>
-						</h5>
+						</h5>`;
+
+					let date = new Date(response.chat.createdAt);
+					let cDate = date.getDate();
+					let cMonth = (date.getMonth() + 1) > 9 ? (date.getMonth() + 1) : '0'+(date.getMonth() + 1);
+					let cYear = date.getFullYear();
+					let getFullDate = cDate + '-' + cMonth + '-' + cYear;
+
+					html +=`
+						<div class='user-data'><b>Me </b>`+getFullDate+`</div>
 					</div>
 				`;
 				$('#group-chat-container').append(html);
@@ -436,7 +445,22 @@ socket.on('loadNewGroupChat', function(data) {
 			<div class="distance-user-chat" id='`+data._id+`'>
 				<h5>
 					<span>`+data.message+`</span>
-				</h5>
+				</h5>`;
+
+				let date = new Date(data.createdAt);
+				let cDate = date.getDate();
+				let cMonth = (date.getMonth() + 1) > 9 ? (date.getMonth() + 1) : '0'+(date.getMonth() + 1);
+				let cYear = date.getFullYear();
+				let getFullDate = cDate + '-' + cMonth + '-' + cYear;
+
+			html += `
+				<div class='user-data'>
+					<img src="`+data.sender_id.image+`" class="user-chat-image" />
+						<b>
+							`+data.sender_id.name+` 
+						</b>
+						`+getFullDate+`
+				</div>
 			</div>
 		`;
 		$('#group-chat-container').append(html);
@@ -451,13 +475,14 @@ function loadGroupChats() {
 		type: "POST",
 		data: { group_id: global_group_id },
 		success: function(res) {
+			console.log('res', res)
 			if(res.success) {
 				let chats = res.data;
 				let html = ``;
 
 				for(let i =0; i < chats.length; i++) {
 					let className = 'distance-user-chat'
-					if(chats[i]['sender_id'] == sender_id) {
+					if(chats[i]['sender_id']._id == sender_id) {
 						className = 'current-user-chat'
 					}
 
@@ -466,12 +491,36 @@ function loadGroupChats() {
 							<h5>
 								<span>`+chats[i]['message']+`</span>`;
 
-					if(chats[i]['sender_id'] == sender_id) {
+					if(chats[i]['sender_id']._id == sender_id) {
 						html += `<i class="fa fa-trash deleteGroupChat" aria-hidden="true" data-id='`+chats[i]['_id']+`' data-toggle="modal" data-target="#deleteGroupChatModal"></i>
 						<i class="fa fa-edit editGroupChat" aria-hidden="true" data-id='`+chats[i]['_id']+`' data-msg='`+chats[i]['message']+`' data-toggle="modal" data-target="#editGroupChatModal"></i>`;
 					}
 					html +=`
-							</h5>
+							</h5>`;
+
+							let date = new Date(chats[i]['createdAt']);
+							let cDate = date.getDate();
+							let cMonth = (date.getMonth() + 1) > 9 ? (date.getMonth() + 1) : '0'+(date.getMonth() + 1);
+							let cYear = date.getFullYear();
+							let getFullDate = cDate + '-' + cMonth + '-' + cYear;
+
+							if(chats[i]['sender_id']._id == sender_id) {
+								html += `
+									<div class='user-data'><b>Me </b>`+getFullDate+`</div>
+								`
+							} else {
+								html += `
+									<div class='user-data'>
+									<img src="`+chats[i]['sender_id'].image+`" class="user-chat-image" />
+										<b>
+											`+chats[i]['sender_id'].name+` 
+										</b>
+										`+getFullDate+`
+									</div>
+								`
+							}
+
+					html +=`
 						</div>
 					`;
 				}
@@ -541,7 +590,7 @@ $('#update-group-chat-form').submit(function(e) {
 			if(res.success) {
 				$('#editGroupChatModal').modal('hide');
 				$('#'+id).find('span').text(msg);
-				$('#'+id).find('.fa-edit').attr("data-msg", msg);
+				$('#'+id).find('.editGroupChat').attr("data-msg", msg);
 				socket.emit('groupChatUpdated', { id, message: msg });
 			} else {
 				alert(res.msg)
