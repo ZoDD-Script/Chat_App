@@ -77,6 +77,11 @@ usp.on('connection', async function(socket) {
   socket.on('groupChatDeleted', function(id) {
     socket.broadcast.emit('groupChatMessageDeleted', id); // broadcase deleted chat id
   });
+
+  //update group chats
+  socket.on('groupChatUpdated', function(data) {
+    socket.broadcast.emit('groupChatMessageUpdated', data);
+  });
 });
 
 // Middleware for routes
