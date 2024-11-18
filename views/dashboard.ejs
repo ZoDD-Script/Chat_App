@@ -11,7 +11,7 @@
             %>
               <li class="list-group-item list-group-item-dark cursor-pointer user-list" data-id="<%= users[i]['_id'] %>"="">
                 <!-- <div> -->
-                  <img src="<%= 'http://127.0.0.1:3000/'+users[i]['image'] %>" alt="" width="50px" height="50px">
+                  <img src="<%= baseUrl+'/'+users[i]['image'] %>" alt="" width="50px" height="50px">
                   
                   <%= users[i]['name'] %>
                 <!-- </div> -->

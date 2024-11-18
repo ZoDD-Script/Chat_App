@@ -80,8 +80,9 @@ const logout = async (req, res) => {
 
 const loadDashboard = async (req, res) => {
   try {
+    const baseUrl = req.protocol + '://' + req.get('host');
     let users = await User.find({ _id: { $nin: [req.session.user._id] } })
-    res.render('dashboard', { user: req.session.user, users: users });
+    res.render('dashboard', { user: req.session.user, users: users, baseUrl: baseUrl });
   } catch (error) {
     console.log(error.message)
   }
